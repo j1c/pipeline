@@ -101,16 +101,14 @@ ENV PATH="/usr/local/miniconda/bin:$PATH" \
     LC_ALL="C.UTF-8" \
     PYTHONNOUSERSITE=1
 
-RUN conda install -y python=3.7.1 \
-    pip=19.1 \
+RUN conda install -y python=3.7.* \
+    pip>=19.1 \
     matplotlib=2.2.2
 
 # Precaching fonts, set 'Agg' as default backend for matplotlib
 RUN python -c "from matplotlib import font_manager" \
     && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" ) \
-    #&& pip install --upgrade pip \
-    #&& apt-get update && apt-get install -y sudo gfortran liblapack-dev libopenblas-dev \
-    && pip install ipython cython parse \
+    #&& pip install ipython \
     && git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
     && cd dmriprep \
     && python setup.py install
