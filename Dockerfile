@@ -65,7 +65,17 @@ ENV PATH=/opt/afni:$PATH
 # eddy is also now included in FSL6
 RUN wget -q http://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
     chmod 775 fslinstaller.py
-RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q
+RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q \
+    && rm -rf /opt/fsl/data \
+    && rm -rf /opt/fsl/bin/FSLeyes* \
+    && rm -rf /opt/fsl/src \
+    && rm -rf /opt/fsl/extras/src \
+    && rm -rf /opt/fsl/doc \
+    && rm -rf /opt/fsl/bin/fslview.app \
+    && rm -rf /opt/fsl/data/atlases \
+    && rm -rf /opt/fsl/data/first \
+    && rm -rf /opt/fsl/data/mist \
+    && rm -rf /opt/fsl/data/possum
 RUN rm -f /fslinstaller.py
 RUN which immv || ( rm -rf /opt/fsl/fslpython && /opt/fsl/etc/fslconf/fslpython_install.sh -f /opt/fsl || ( cat /tmp/fslpython*/fslpython_miniconda_installer.log && exit 1 ) )
 
@@ -79,7 +89,7 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ"
 RUN apt-get remove -y libegl1-mesa-dev && apt-get autoremove -y
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
+# Install conda
 RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
     bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
     rm Miniconda3-4.5.11-Linux-x86_64.sh
