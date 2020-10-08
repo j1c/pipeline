@@ -110,7 +110,10 @@ RUN python -c "from matplotlib import font_manager" \
     && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" ) \
     #&& pip install ipython \
     && git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
+    && git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && cd dmriprep \
+    && python setup.py install \
+    && cd ../m2g \ 
     && python setup.py install
 
 ENV IS_DOCKER_8395080871=1
