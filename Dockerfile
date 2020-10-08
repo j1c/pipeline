@@ -15,9 +15,7 @@ RUN apt-get update && apt-get install -y \
     libopenblas-dev \
     liblapack-dev \
     nano \
-    perl-modules-5.26 \
     python2.7 \
-    python3 \
     tar \
     tcsh \
     unzip \
