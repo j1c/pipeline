@@ -46,8 +46,10 @@ ENV PATH /usr/lib/ants:$PATH
 # #---------AFNI INSTALL--------------------------------------------------------#
 # # setup of AFNI, which provides robust modifications of many of neuroimaging
 # # algorithms
-RUN apt-get update -qq && apt-get install -yq --no-install-recommends ed gsl-bin libglu1-mesa-dev libglib2.0-0 libglw1-mesa fsl-atlases \
-    libgomp1 libjpeg62 libxm4 netpbm tcsh xfonts-base xvfb && \
+ENV AFNI_URL https://files.osf.io/v1/resources/fvuh8/providers/osfstorage/5a0dd9a7b83f69027512a12b
+
+RUN apt-get update -qq && apt-get install -yq --no-install-recommends ed gsl-bin libglib2.0-0 libglw1-mesa fsl-atlases \
+    libgomp1 libjpeg62 libxm4 netpbm xfonts-base xvfb && \
     libs_path=/usr/lib/x86_64-linux-gnu && \
     if [ -f $libs_path/libgsl.so.19 ]; then \
     ln $libs_path/libgsl.so.19 $libs_path/libgsl.so.0; \
