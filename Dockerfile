@@ -102,7 +102,7 @@ ENV PATH="/usr/local/miniconda/bin:$PATH" \
     PYTHONNOUSERSITE=1
 
 RUN conda install -y python=3.7.* \
-    pip>=19.1 \
+    pip \
     matplotlib=2.2.2
 
 # Precaching fonts, set 'Agg' as default backend for matplotlib
@@ -116,8 +116,6 @@ RUN python -c "from matplotlib import font_manager" \
     && cd ../m2g \ 
     && pip install -r requirements.txt \
     && python setup.py install
-
-ENV IS_DOCKER_8395080871=1
 
 RUN ldconfig
 WORKDIR /tmp/
