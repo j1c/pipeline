@@ -36,20 +36,6 @@ RUN wget -qO- http://neuro.debian.net/lists/bionic.au.full | \
 RUN apt-key add /neurodebian.gpg && \
     apt-get update
 
-# FSL installer appears to now be ready for use with version 6.0.0
-# eddy is also now included in FSL6
-RUN wget -q http://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
-    chmod 775 fslinstaller.py
-RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q
-RUN rm -f /fslinstaller.py
-RUN which immv || ( rm -rf /opt/fsl/fslpython && /opt/fsl/etc/fslconf/fslpython_install.sh -f /opt/fsl || ( cat /tmp/fslpython*/fslpython_miniconda_installer.log && exit 1 ) )
-
-# Make FSL happy
-ENV FSLDIR /opt/fsl
-ENV PATH $FSLDIR/bin:$PATH
-RUN /bin/bash -c 'source /opt/fsl/etc/fslconf/fsl.sh'
-ENV FSLOUTPUTTYPE="NIFTI_GZ"
-
 # Install ANTS 2.2.0
 RUN apt-get install -y ants=2.2.0-1ubuntu1
 
@@ -72,6 +58,20 @@ RUN mkdir -p /opt/afni && \
     tar zxv -C /opt/afni --strip-components=1 -f afni.tar.gz && \
     rm -rf afni.tar.gz
 ENV PATH=/opt/afni:$PATH
+
+# FSL installer appears to now be ready for use with version 6.0.0
+# eddy is also now included in FSL6
+RUN wget -q http://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
+    chmod 775 fslinstaller.py
+RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q
+RUN rm -f /fslinstaller.py
+RUN which immv || ( rm -rf /opt/fsl/fslpython && /opt/fsl/etc/fslconf/fslpython_install.sh -f /opt/fsl || ( cat /tmp/fslpython*/fslpython_miniconda_installer.log && exit 1 ) )
+
+# Make FSL happy
+ENV FSLDIR /opt/fsl
+ENV PATH $FSLDIR/bin:$PATH
+RUN /bin/bash -c 'source /opt/fsl/etc/fslconf/fsl.sh'
+ENV FSLOUTPUTTYPE="NIFTI_GZ"
 
 # apt cleanup to recover as much space as possible
 RUN apt-get remove -y libegl1-mesa-dev && apt-get autoremove -y
