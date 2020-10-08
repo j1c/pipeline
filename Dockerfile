@@ -114,6 +114,7 @@ RUN python -c "from matplotlib import font_manager" \
     && cd dmriprep \
     && python setup.py install \
     && cd ../m2g \ 
+    && pip install -r requirements.txt \
     && python setup.py install
 
 ENV IS_DOCKER_8395080871=1
