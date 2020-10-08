@@ -65,8 +65,8 @@ ENV PATH=/opt/afni:$PATH
 # eddy is also now included in FSL6
 RUN wget -q http://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
     chmod 775 fslinstaller.py
-RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q \
-    && rm -rf /opt/fsl/data \
+RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q 
+RUN rm -rf /opt/fsl/data \
     && rm -rf /opt/fsl/bin/FSLeyes* \
     && rm -rf /opt/fsl/src \
     && rm -rf /opt/fsl/extras/src \
