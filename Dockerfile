@@ -37,7 +37,7 @@ RUN apt-key add /neurodebian.gpg && \
     apt-get update
 
 # Install ANTS 2.2.0
-RUN apt-get install -y ants=2.2.0-1ubuntu1
+RUN apt-get install -y ants=2.2.0-1~nd16.04+1
 
 # Make ANTS happy
 ENV ANTSPATH /usr/lib/ants
