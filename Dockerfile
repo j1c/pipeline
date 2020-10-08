@@ -31,13 +31,13 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh && \
 RUN apt-get install -y nodejs
 
 # NeuroDebian setup
-RUN wget -qO- http://neuro.debian.net/lists/bionic.au.full | \
+RUN wget -qO- http://neuro.debian.net/lists/xenial.us-ca.full | \
     tee /etc/apt/sources.list.d/neurodebian.sources.list
 RUN apt-key add /neurodebian.gpg && \
     apt-get update
 
 # Install ANTS 2.2.0
-RUN apt-get install -y ants=2.2.0-1~nd16.04+1
+RUN apt-get install -y ants
 
 # Make ANTS happy
 ENV ANTSPATH /usr/lib/ants
