@@ -2,7 +2,7 @@
 FROM nvidia/cuda:9.1-devel-ubuntu16.04
 
 # Pre-cache neurodebian key
-COPY docker/files/neurodebian.gpg /neurodebian.gpg
+COPY neurodebian.gpg /neurodebian.gpg
 
 # Core system capabilities required
 RUN apt-get update && apt-get install -y \
