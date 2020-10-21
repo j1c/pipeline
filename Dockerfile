@@ -107,19 +107,23 @@ RUN conda install -y python=3.7.* \
 
 # Precaching fonts, set 'Agg' as default backend for matplotlib
 RUN python -c "from matplotlib import font_manager" \
-    && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" ) \
-    #&& pip install ipython \
-    && git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
-    && git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
-    && git clone https://github.com/j1c/hcp2bids \
-    && git clone https://github.com/neurodata/hcp_pipelines \
+    && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
+#&& pip install ipython \
+
+RUN git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
     && cd dmriprep \
-    && python setup.py install \
+    && python setup.py install 
+
+RUN git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && cd ../m2g \ 
-    #&& pip install -r requirements.txt \
-    && python setup.py install \
+    && pip install -r requirements.txt \
+    && pip install .
+
+RUN git clone https://github.com/j1c/hcp2bids \
     && cd ../hcp2bids \
-    && pip install . \
+    && pip install .
+
+RUN git clone https://github.com/neurodata/hcp_pipelines \
     && cd ../hcp_pipelines \ 
     && pip install .
 
