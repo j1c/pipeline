@@ -96,8 +96,16 @@ def main():
         help="Seeding density for tractography. Default is 20.",
         default=20,
     )
-    parser.add_argument("--aws_key", action="store")
-    parser.add_argument("--aws_secret_key", action="store")
+    parser.add_argument(
+        "--aws_key",
+        action="store",
+        help="AWS key for HCP S3 bucket.",
+    )
+    parser.add_argument(
+        "--aws_secret_key",
+        action="store",
+        help="AWS secret key for HCP S3 bucket.",
+    )
     args = parser.parse_args()
 
     # Get the data and convert to bids
