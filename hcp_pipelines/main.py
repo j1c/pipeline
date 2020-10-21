@@ -37,7 +37,6 @@ def main():
     #     files should be stored.""",
     # )
     parser.add_argument(
-        "--nprocs",
         "--n_cpus",
         action="store",
         type=int,
