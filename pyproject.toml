@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "hcp_pipelines"
+version = "0.1.0"
+description = "Pipeline for processing HCP data"
+license = "MIT"
+authors = ["j1c <jaewonc78@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+hcp2bids = "^0.2.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0a5"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+hcp = 'hcp_pipelines.main:main'
