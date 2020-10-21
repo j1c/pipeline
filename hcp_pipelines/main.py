@@ -59,7 +59,6 @@ def main():
         parameter is not provided all subjects should be
         analyzed. Multiple participants can be specified
         with a space separated list.""",
-        nargs="+",
     )
     parser.add_argument(
         "--session_label",
