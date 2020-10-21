@@ -110,10 +110,6 @@ RUN python -c "from matplotlib import font_manager" \
     && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
 #&& pip install ipython \
 
-RUN git clone -b homecooked https://github.com/neurodata/dmriprep.git dmriprep \
-    && cd dmriprep \
-    && python setup.py install 
-
 RUN git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && cd ../m2g \ 
     && pip install -r requirements.txt \
@@ -129,6 +125,10 @@ RUN git clone https://github.com/neurodata/hcp_pipelines \
     && pip uninstall -y duecredit
 
 RUN pip uninstall -y duecredit
+
+RUN git clone -b homecooked https://github.com/neurodata/dmriprep.git dmriprep \
+    && cd dmriprep \
+    && python setup.py install 
 
 # Create a shared $HOME directory
 RUN useradd --no-user-group --create-home --shell /bin/bash ubuntu
