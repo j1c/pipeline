@@ -111,11 +111,14 @@ RUN python -c "from matplotlib import font_manager" \
     #&& pip install ipython \
     && git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
     && git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
+    && git clone https://github.com/j1c/hcp2bids \
     && cd dmriprep \
     && python setup.py install \
     && cd ../m2g \ 
     && pip install -r requirements.txt \
-    && python setup.py install
+    && python setup.py install \
+    && cd ../hcp2bids \
+    && pip install .
 
 RUN ldconfig
 WORKDIR /tmp/
