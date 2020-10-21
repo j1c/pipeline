@@ -154,11 +154,13 @@ def main():
             if suffix == ".gz":
                 suffix = ".nii.gz"
 
-            new_name = bids_name + suffix
-            file.rename(parent / new_name)
+            new_name = parent / bids_name + suffix
+            file.rename(new_name)
 
             if suffix == ".nii.gz":
-                (m2g_path / "eddy_corrected_data.nii.gz").symlink_to(parent / new_name)
+                eddy_file = m2g_path / "eddy_corrected_data.nii.gz"
+                shutil.copyfile(str(new_name.absolute()), str(eddy_file.absolute()))
+                # (m2g_path / "eddy_corrected_data.nii.gz").symlink_to(parent / new_name)
 
     # Run m2g
     cmd = f"m2g_bids --participant_label  {args.participant_label} --session_label 1 \
