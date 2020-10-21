@@ -110,7 +110,7 @@ RUN python -c "from matplotlib import font_manager" \
     && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
 #&& pip install ipython \
 
-RUN git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
+RUN git clone -b homecooked https://github.com/neurodata/dmriprep.git dmriprep \
     && cd dmriprep \
     && python setup.py install 
 
