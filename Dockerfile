@@ -113,6 +113,7 @@ RUN python -c "from matplotlib import font_manager" \
 RUN git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && cd ../m2g \ 
     && pip install -r requirements.txt \
+    && pip install pyyaml \
     && pip install .
 
 RUN git clone https://github.com/j1c/hcp2bids \
