@@ -127,6 +127,23 @@ RUN git clone https://github.com/neurodata/hcp_pipelines \
     && cd ../hcp_pipelines \ 
     && pip install .
 
+# Create a shared $HOME directory
+RUN useradd --no-user-group --create-home --shell /bin/bash ubuntu
+WORKDIR /home/ubuntu
+ENV HOME="/home/ubuntu"
+
+RUN chown -R ubuntu /usr/local/miniconda/lib/python3.7 \
+    && chown -R ubuntu /home/ubuntu \
+    && chmod -R 777 /home/ubuntu \
+    && find $HOME -type f -exec chmod go=u {} + \
+    && mkdir /inputs \
+    && chmod -R 777 /inputs \
+    && mkdir /outputs \
+    && chmod -R 777 /outputs \
+    && echo "ubuntu ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user \
+    && chmod a+s -R /usr/local \
+    && chmod -R 775 /usr/local/miniconda/lib/python3.7/site-packages 
+
 RUN ldconfig
 WORKDIR /tmp/
 ENTRYPOINT ["/usr/local/miniconda/bin/"]
