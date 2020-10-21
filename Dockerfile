@@ -126,9 +126,9 @@ RUN git clone https://github.com/j1c/hcp2bids \
 RUN git clone https://github.com/neurodata/hcp_pipelines \
     && cd ../hcp_pipelines \ 
     && pip install . \
-    && pip uninstall duecredit
+    && pip uninstall -y duecredit
 
-RUN pip uninstall duecredit
+RUN pip uninstall -y duecredit
 
 # Create a shared $HOME directory
 RUN useradd --no-user-group --create-home --shell /bin/bash ubuntu
