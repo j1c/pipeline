@@ -121,14 +121,12 @@ RUN git clone https://github.com/j1c/hcp2bids \
 
 RUN git clone https://github.com/neurodata/hcp_pipelines \
     && cd ../hcp_pipelines \ 
-    && pip install . \
-    && pip uninstall -y duecredit
-
-RUN pip uninstall -y duecredit
+    && pip install . 
 
 RUN git clone -b homecooked https://github.com/neurodata/dmriprep.git dmriprep \
     && cd dmriprep \
-    && python setup.py install 
+    && pip install boto3==1.12.33 \
+    && python setup.py install
 
 # Create a shared $HOME directory
 RUN useradd --no-user-group --create-home --shell /bin/bash ubuntu
