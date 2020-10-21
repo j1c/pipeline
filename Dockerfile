@@ -112,14 +112,17 @@ RUN python -c "from matplotlib import font_manager" \
     && git clone -b homecooked https://github.com/j1c/dmriprep.git dmriprep \
     && git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && git clone https://github.com/j1c/hcp2bids \
+    && git clone https://github.com/neurodata/hcp_pipelines \
     && cd dmriprep \
     && python setup.py install \
     && cd ../m2g \ 
     && pip install -r requirements.txt \
     && python setup.py install \
     && cd ../hcp2bids \
+    && pip install . \
+    && cd ../hcp_pipelines \ 
     && pip install .
 
 RUN ldconfig
 WORKDIR /tmp/
-ENTRYPOINT ["/usr/local/miniconda/bin/dmriprep"]
+ENTRYPOINT ["/usr/local/miniconda/bin/"]
