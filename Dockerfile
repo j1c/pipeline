@@ -146,4 +146,4 @@ RUN chown -R ubuntu /usr/local/miniconda/lib/python3.7 \
 
 RUN ldconfig
 WORKDIR /tmp/
-ENTRYPOINT ["/usr/local/miniconda/bin/"]
+ENTRYPOINT ["hcp"]
