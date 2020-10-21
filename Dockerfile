@@ -140,7 +140,7 @@ RUN chown -R ubuntu /usr/local/miniconda/lib/python3.7 \
     && chmod -R 777 /inputs \
     && mkdir /outputs \
     && chmod -R 777 /outputs \
-    && echo "ubuntu ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user \
+    && usermod -aG sudo ubuntu \
     && chmod a+s -R /usr/local \
     && chmod -R 775 /usr/local/miniconda/lib/python3.7/site-packages 
 
