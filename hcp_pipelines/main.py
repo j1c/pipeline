@@ -1,6 +1,7 @@
 import subprocess
 import shutil
 from argparse import ArgumentParser
+from pathlib import Path
 
 from hcp2bids import convert, get_data
 
@@ -131,15 +132,42 @@ def main():
     shutil.rmtree("/work_dir")
 
     # Rename files
+    input_dir = f"/input/sub-{args.participant_label}"
+    shutil.rmtree(input_dir)
+    Path(f"/output/sub-{args.participant_label}").rename(
+        f"/input/sub-{args.participant_label}"
+    )
+    input_dir = Path(input_dir)
+
+    # Make output dir per m2g spec
+    m2g_path = Path(f"/output/sub-{args.participant_label}/ses-1/dwi/preproc/")
+    m2g_path.mkdir(parents=True, exist_ok=True)
+
+    files = list(input_dir.glob("*"))
+    for file in files:
+        if not "final" in file.name:
+            file.unlink()
+        else:
+            parent = file.parent
+            bids_name = f"sub-{args.participant_label}_ses-1_run-1"
+            suffix = file.suffix
+            if suffix == ".gz":
+                suffix = ".nii.gz"
+
+            new_name = bids_name + suffix
+            file.rename(parent / new_name)
+
+            if suffix == ".nii.gz":
+                (m2g_path / "eddy_corrected_data.nii.gz").symlink_to(parent / new_name)
 
     # Run m2g
-    # cmd = f"m2g_bids --participant_label  {args.participant_label} --session_label 1 \
-    #     --pipeline dwi --skipeddy --voxelsize 1mm \
-    #     --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} -seed {args.seeds} \
-    #     --diffusion_model {args.diffusion_model} --mod {args.mod}  \
-    #     --filtering_type {args.filtering_type} \
-    #     /input /output"
-    # run(cmd)
+    cmd = f"m2g_bids --participant_label  {args.participant_label} --session_label 1 \
+        --pipeline dwi --skipeddy --voxelsize 1mm \
+        --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} -seed {args.seeds} \
+        --diffusion_model {args.diffusion_model} --mod {args.mod}  \
+        --filtering_type {args.filtering_type} \
+        /input /output"
+    run(cmd)
 
 
 if __name__ == "__main__":
