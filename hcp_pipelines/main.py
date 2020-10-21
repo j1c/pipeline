@@ -108,6 +108,7 @@ def main():
     args = parser.parse_args()
 
     # Get the data and convert to bids
+    print("Downloading data...\n")
     get_data(
         output_path="/input",
         subjects=args.participant_label,
