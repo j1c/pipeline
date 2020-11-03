@@ -128,7 +128,7 @@ def main():
     run(cmd)
 
     # Delete work dir
-    shutil.rmtree("/work_dir")
+    shutil.rmtree("/work_dir", ignore_errors=True)
 
     # Rename files
     input_dir = f"/input/sub-{args.participant_label}"
