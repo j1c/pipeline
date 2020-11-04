@@ -44,6 +44,12 @@ def main():
         default=True,
     )
     parser.add_argument(
+        "--exclude_download",
+        action="store",
+        help="Keywords used to skip files in downloads",
+        nargs="+",
+    )
+    parser.add_argument(
         "--n_cpus",
         action="store",
         type=int,
@@ -114,27 +120,27 @@ def main():
     )
     args = parser.parse_args()
 
-    # # Get the data and convert to bids
-    # print("Downloading data...\n")
-    # get_data(
-    #     output_path="/input",
-    #     subjects=args.participant_label,
-    #     access_key_id=args.aws_key,
-    #     secret_access_key=args.aws_secret_key,
-    # )
-    # convert(
-    #     input_path="/input",
-    #     output_path="/input",
-    #     include_ses=True,
-    # )
+    # Get the data and convert to bids
+    print("Downloading data...\n")
+    get_data(
+        output_path="/input",
+        subjects=args.participant_label,
+        access_key_id=args.aws_key,
+        secret_access_key=args.aws_secret_key,
+    )
+    convert(
+        input_path="/input",
+        output_path="/input",
+        include_ses=True,
+    )
 
-    # # Run dmriprep
-    # print("Running dmriprep...\n")
-    # cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
-    #     --denoise_strategy nlmeans \
-    #     --participant_label {args.participant_label} \
-    #     --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
-    # run(cmd)
+    # Run dmriprep
+    print("Running dmriprep...\n")
+    cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
+        --denoise_strategy nlmeans \
+        --participant_label {args.participant_label} \
+        --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
+    run(cmd)
 
     # Rename files
     input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi/"
