@@ -129,7 +129,7 @@ def main():
     # run(cmd)
 
     # Rename files
-    input_dir = f"/input/sub-{args.participant_label}"
+    input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi"
     shutil.rmtree(input_dir)
     shutil.copytree(
         f"/output/sub-{args.participant_label}", f"/input/sub-{args.participant_label}"
@@ -141,7 +141,7 @@ def main():
     m2g_path = Path(f"/output/sub-{args.participant_label}/ses-1/dwi/preproc/")
     m2g_path.mkdir(parents=True, exist_ok=True)
 
-    files = list(input_dir.glob("*"))
+    files = list(input_dir.glob("*/*"))
     for file in files:
         if not "final" in file.name:
             file.unlink()
