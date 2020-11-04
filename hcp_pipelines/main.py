@@ -127,6 +127,7 @@ def main():
         subjects=args.participant_label,
         access_key_id=args.aws_key,
         secret_access_key=args.aws_secret_key,
+        exclude_list=args.exclude_download,
     )
     convert(
         input_path="/input",
