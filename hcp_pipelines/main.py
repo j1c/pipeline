@@ -129,10 +129,11 @@ def main():
     # run(cmd)
 
     # Rename files
-    input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi"
+    input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi/"
     shutil.rmtree(input_dir)
     shutil.copytree(
-        f"/output/sub-{args.participant_label}", f"/input/sub-{args.participant_label}"
+        f"/output/sub-{args.participant_label}/ses-1/dwi/",
+        f"/input/sub-{args.participant_label}/ses-1/dwi/",
     )
     shutil.rmtree("/output/", ignore_errors=True)
     input_dir = Path(input_dir)
@@ -141,7 +142,7 @@ def main():
     m2g_path = Path(f"/output/sub-{args.participant_label}/ses-1/dwi/preproc/")
     m2g_path.mkdir(parents=True, exist_ok=True)
 
-    files = list(input_dir.glob("*/*"))
+    files = list(input_dir.glob("*.*"))
     for file in files:
         if not "final" in file.name:
             file.unlink()
@@ -152,13 +153,12 @@ def main():
             if suffix == ".gz":
                 suffix = ".nii.gz"
 
-            new_name = parent / bids_name + suffix
+            new_name = parent / (bids_name + suffix)
             file.rename(new_name)
 
             if suffix == ".nii.gz":
                 eddy_file = m2g_path / "eddy_corrected_data.nii.gz"
                 shutil.copyfile(str(new_name.absolute()), str(eddy_file.absolute()))
-                # (m2g_path / "eddy_corrected_data.nii.gz").symlink_to(parent / new_name)
 
     # Delete work dir
     shutil.rmtree("/work_dir", ignore_errors=True)
