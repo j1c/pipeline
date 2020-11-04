@@ -131,7 +131,7 @@ def main():
     # Rename files
     input_dir = f"/input/sub-{args.participant_label}"
     shutil.rmtree(input_dir)
-    shutil.copy(
+    shutil.copytree(
         f"/output/sub-{args.participant_label}", f"/input/sub-{args.participant_label}"
     )
     shutil.rmtree("/output/", ignore_errors=True)
