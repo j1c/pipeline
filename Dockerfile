@@ -89,6 +89,9 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ"
 RUN apt-get remove -y libegl1-mesa-dev && apt-get autoremove -y
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install git lfs for m2g
+RUN apt install git-lfs
+
 # Install conda
 RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
     bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
