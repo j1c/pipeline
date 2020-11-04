@@ -37,6 +37,13 @@ def main():
     #     files should be stored.""",
     # )
     parser.add_argument(
+        "--remove_work_dir",
+        action="store",
+        help="Remove the work directory from dmriprep outputs if true.",
+        type=bool,
+        default=True,
+    )
+    parser.add_argument(
         "--n_cpus",
         action="store",
         type=int,
@@ -162,7 +169,8 @@ def main():
                 shutil.copyfile(str(new_name.absolute()), str(eddy_file.absolute()))
 
     # Delete work dir
-    shutil.rmtree("/work_dir", ignore_errors=True)
+    if args.remove_work_dir:
+        shutil.rmtree("/work_dir", ignore_errors=True)
 
     # Run m2g
     cmd = f"m2g_bids --participant_label {args.participant_label} --session_label 1\
