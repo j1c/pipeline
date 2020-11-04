@@ -123,6 +123,7 @@ def main():
 
     # Run dmriprep
     cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
+        --denoise_strategy nlmeans \
         --participant_label {args.participant_label} \
         --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
     run(cmd)
