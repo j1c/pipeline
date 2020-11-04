@@ -122,21 +122,19 @@ def main():
     )
 
     # Run dmriprep
-    cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
-        --denoise_strategy nlmeans \
-        --participant_label {args.participant_label} \
-        --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
-    run(cmd)
-
-    # Delete work dir
-    shutil.rmtree("/work_dir", ignore_errors=True)
+    # cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
+    #     --denoise_strategy nlmeans \
+    #     --participant_label {args.participant_label} \
+    #     --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
+    # run(cmd)
 
     # Rename files
     input_dir = f"/input/sub-{args.participant_label}"
     shutil.rmtree(input_dir)
-    Path(f"/output/sub-{args.participant_label}").rename(
-        f"/input/sub-{args.participant_label}"
+    shutil.copy(
+        f"/output/sub-{args.participant_label}", f"/input/sub-{args.participant_label}"
     )
+    shutil.rmtree("/output/", ignore_errors=True)
     input_dir = Path(input_dir)
 
     # Make output dir per m2g spec
@@ -161,6 +159,9 @@ def main():
                 eddy_file = m2g_path / "eddy_corrected_data.nii.gz"
                 shutil.copyfile(str(new_name.absolute()), str(eddy_file.absolute()))
                 # (m2g_path / "eddy_corrected_data.nii.gz").symlink_to(parent / new_name)
+
+    # Delete work dir
+    shutil.rmtree("/work_dir", ignore_errors=True)
 
     # Run m2g
     cmd = f"m2g_bids --participant_label  {args.participant_label} --session_label 1 \
