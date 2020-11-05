@@ -40,7 +40,6 @@ def main():
         "--remove_work_dir",
         action="store_true",
         help="Remove the work directory from dmriprep outputs if true.",
-        type=bool,
     )
     parser.add_argument(
         "--exclude_download",
