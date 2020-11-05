@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     libegl1-mesa-dev \
     libopenblas-dev \
     liblapack-dev \
+    libglu1-mesa \
+    libglu1-mesa-dev \
     nano \
     python2.7 \
     tar \
@@ -86,7 +88,6 @@ RUN /bin/bash -c 'source /opt/fsl/etc/fslconf/fsl.sh'
 ENV FSLOUTPUTTYPE="NIFTI_GZ"
 
 # apt cleanup to recover as much space as possible
-RUN apt-get remove -y libegl1-mesa-dev && apt-get autoremove -y
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install git lfs for m2g
