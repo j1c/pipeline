@@ -85,6 +85,12 @@ def main():
         nargs="+",
     )
     parser.add_argument(
+        "--denoise_strategy",
+        action="store",
+        default="mppca",
+        help="Denoising strategy. Choices include: mppca, nlmeans, localpca, and nlsam",
+    )
+    parser.add_argument(
         "--mod",
         action="store",
         help="Deterministic (det) or probabilistic (prob) tracking. Default is det.",
@@ -138,7 +144,7 @@ def main():
     # Run dmriprep
     print("Running dmriprep...\n")
     cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
-        --denoise_strategy nlmeans \
+        --denoise_strategy {args.denoise_strategy} \
         --participant_label {args.participant_label} \
         --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
     run(cmd)
