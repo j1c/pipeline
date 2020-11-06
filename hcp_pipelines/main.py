@@ -197,10 +197,10 @@ def main():
     # Run m2g
     cmd = f"m2g_bids --participant_label {args.participant_label} --session_label 1\
         --pipeline dwi --skipeddy --voxelsize 1mm\
+        --parcellation {' '.join(args.parcellation)}\
         --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
         --diffusion_model {args.diffusion_model} --mod {args.mod}\
         --filtering_type {args.filtering_type}\
-        --parcellation {' '.join(args.parcellation)}\
         /input /output"
     run(cmd)
 
