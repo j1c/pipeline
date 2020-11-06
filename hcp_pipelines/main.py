@@ -37,6 +37,7 @@ def main():
     #     files should be stored.""",
     # )
     parser.add_argument("--skip_dmriprep", action="store_true")
+    parser.add_argument("--skip_download", action="store_true")
     parser.add_argument(
         "--remove_work_dir",
         action="store_true",
@@ -125,20 +126,21 @@ def main():
     )
     args = parser.parse_args()
 
-    # Get the data and convert to bids
-    print("Downloading data...\n")
-    get_data(
-        output_path="/input",
-        subjects=args.participant_label,
-        access_key_id=args.aws_key,
-        secret_access_key=args.aws_secret_key,
-        exclude_list=args.exclude_download,
-    )
-    convert(
-        input_path="/input",
-        output_path="/input",
-        include_ses=True,
-    )
+    if not args.skip_download:
+        # Get the data and convert to bids
+        print("Downloading data...\n")
+        get_data(
+            output_path="/input",
+            subjects=args.participant_label,
+            access_key_id=args.aws_key,
+            secret_access_key=args.aws_secret_key,
+            exclude_list=args.exclude_download,
+        )
+        convert(
+            input_path="/input",
+            output_path="/input",
+            include_ses=True,
+        )
 
     if not args.skip_dmriprep:
         # Run dmriprep
