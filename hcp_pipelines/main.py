@@ -199,7 +199,8 @@ def main():
         --pipeline dwi --skipeddy --voxelsize 1mm\
         --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
         --diffusion_model {args.diffusion_model} --mod {args.mod}\
-        --filtering_type {args.filtering_type} --parcellation {args.parcellation}\
+        --filtering_type {args.filtering_type}\
+        --parcellation {' '.join(args.parcellation)}\
         /input /output"
     run(cmd)
 
