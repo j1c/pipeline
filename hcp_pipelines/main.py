@@ -115,6 +115,13 @@ def main():
         default=20,
     )
     parser.add_argument(
+        "--parcellation",
+        action="store",
+        help="The parcellation(s) being analyzed. Multiple parcellations can be provided with a space separated list.",
+        nargs="+",
+        default=None,
+    )
+    parser.add_argument(
         "--aws_key",
         action="store",
         help="AWS key for HCP S3 bucket.",
@@ -192,7 +199,7 @@ def main():
         --pipeline dwi --skipeddy --voxelsize 1mm\
         --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
         --diffusion_model {args.diffusion_model} --mod {args.mod}\
-        --filtering_type {args.filtering_type}\
+        --filtering_type {args.filtering_type} --parcellation {args.parcellation}\
         /input /output"
     run(cmd)
 
