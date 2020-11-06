@@ -68,16 +68,6 @@ ENV PATH=/opt/afni:$PATH
 RUN wget -q http://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
     chmod 775 fslinstaller.py
 RUN python2 /fslinstaller.py -d /opt/fsl -V 6.0.4 -q 
-RUN rm -rf /opt/fsl/data \
-    && rm -rf /opt/fsl/bin/FSLeyes* \
-    && rm -rf /opt/fsl/src \
-    && rm -rf /opt/fsl/extras/src \
-    && rm -rf /opt/fsl/doc \
-    && rm -rf /opt/fsl/bin/fslview.app \
-    && rm -rf /opt/fsl/data/atlases \
-    && rm -rf /opt/fsl/data/first \
-    && rm -rf /opt/fsl/data/mist \
-    && rm -rf /opt/fsl/data/possum
 RUN rm -f /fslinstaller.py
 RUN which immv || ( rm -rf /opt/fsl/fslpython && /opt/fsl/etc/fslconf/fslpython_install.sh -f /opt/fsl || ( cat /tmp/fslpython*/fslpython_miniconda_installer.log && exit 1 ) )
 
