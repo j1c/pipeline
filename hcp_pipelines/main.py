@@ -1,9 +1,11 @@
-import subprocess
 import shutil
+import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
 
 from hcp2bids import convert, get_data
+
+from .utils import s3_upload
 
 
 def run(cmd):
@@ -38,6 +40,14 @@ def main():
     # )
     parser.add_argument("--skip_dmriprep", action="store_true")
     parser.add_argument("--skip_download", action="store_true")
+    parser.add_argument("--skip_m2g", action="store_true")
+    parser.add_argument(
+        "--push_location",
+        action="store",
+        help="Name of folder on s3 to push output data to, if the folder does not exist, it will be created."
+        "Format the location as `s3://<bucket>/<path>`",
+        default=None,
+    )
     parser.add_argument(
         "--remove_work_dir",
         action="store_true",
@@ -72,17 +82,6 @@ def main():
         parameter is not provided all subjects should be
         analyzed. Multiple participants can be specified
         with a space separated list.""",
-    )
-    parser.add_argument(
-        "--session_label",
-        help="""The label(s) of the
-        session that should be analyzed. The label
-        corresponds to ses-<participant_label> from the BIDS
-        spec (so it does not include "ses-"). If this
-        parameter is not provided all sessions should be
-        analyzed. Multiple sessions can be specified
-        with a space separated list.""",
-        nargs="+",
     )
     parser.add_argument(
         "--denoise_strategy",
@@ -122,16 +121,27 @@ def main():
         default=None,
     )
     parser.add_argument(
-        "--aws_key",
+        "--hcp_key",
         action="store",
-        help="AWS key for HCP S3 bucket.",
+        help="Credentials for HCP bucket in form of (public, secret) key.",
+        nargs="+",
+        default=None,
     )
     parser.add_argument(
-        "--aws_secret_key",
+        "--s3_key",
         action="store",
-        help="AWS secret key for HCP S3 bucket.",
+        help="Credentials for s3 upload bucket in form of (public, secret) key.",
+        nargs="+",
+        default=None,
     )
     args = parser.parse_args()
+
+    if len(args.hcp_key) != 2:
+        raise ValueError("--hcp_key must have two parameters.")
+
+    if args.push_location:
+        if len(args.hcp_key) != 2:
+            raise ValueError("--s3_key must have two parameters.")
 
     if not args.skip_download:
         # Get the data and convert to bids
@@ -139,8 +149,8 @@ def main():
         get_data(
             output_path="/input",
             subjects=args.participant_label,
-            access_key_id=args.aws_key,
-            secret_access_key=args.aws_secret_key,
+            access_key_id=args.hcp_key[0],
+            secret_access_key=args.hcp_key[1],
             exclude_list=args.exclude_download,
         )
         convert(
@@ -195,14 +205,27 @@ def main():
             shutil.rmtree("/work_dir", ignore_errors=True)
 
     # Run m2g
-    cmd = f"m2g_bids --participant_label {args.participant_label} --session_label 1\
-        --pipeline dwi --skipeddy --voxelsize 1mm\
-        --parcellation {' '.join(args.parcellation)}\
-        --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
-        --diffusion_model {args.diffusion_model} --mod {args.mod}\
-        --filtering_type {args.filtering_type}\
-        /input /output"
-    run(cmd)
+    if not args.skip_m2g:
+        cmd = f"m2g_bids --participant_label {args.participant_label} --session_label 1\
+            --pipeline dwi --skipeddy --voxelsize 1mm\
+            --parcellation {' '.join(args.parcellation)}\
+            --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
+            --diffusion_model {args.diffusion_model} --mod {args.mod}\
+            --filtering_type {args.filtering_type}\
+            /input /output"
+        run(cmd)
+
+    # Upload to s3
+    if args.push_location:
+        print(f"Pushing to s3 at {push_location}.")
+        s3_push_data(
+            args.push_location,
+            "/output",
+            subject=args.participant_label,
+            session="1",
+            access_key_id=args.s3_key[0],
+            secret_access_key=args.s3_key[0],
+        )
 
 
 if __name__ == "__main__":
