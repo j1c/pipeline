@@ -97,13 +97,12 @@ ENV PATH="/usr/local/miniconda/bin:$PATH" \
     PYTHONNOUSERSITE=1
 
 RUN conda install -y python=3.7.* \
-    pip \
-    matplotlib=2.2.2
+    pip
 
-# Precaching fonts, set 'Agg' as default backend for matplotlib
-RUN python -c "from matplotlib import font_manager" \
-    && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
-#&& pip install ipython \
+# # Precaching fonts, set 'Agg' as default backend for matplotlib
+# RUN python -c "from matplotlib import font_manager" \
+#     && sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
+# #&& pip install ipython \
 
 RUN git clone -b bug_fix https://github.com/j1c/m2g.git m2g \
     && cd ../m2g \ 
