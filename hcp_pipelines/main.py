@@ -28,16 +28,6 @@ def main():
     parser = ArgumentParser(
         description="This is an end-to-end connectome estimation pipeline from multishell images."
     )
-    # arser.add_argument(
-    #     "input_dir",
-    #     help="""The directory with the input dataset
-    #     formatted according to the BIDS standard.""",
-    # )
-    # parser.add_argument(
-    #     "output_dir",
-    #     help="""The local directory where the output
-    #     files should be stored.""",
-    # )
     parser.add_argument("--skip_dmriprep", action="store_true")
     parser.add_argument("--skip_download", action="store_true")
     parser.add_argument("--skip_m2g", action="store_true")
@@ -224,7 +214,7 @@ def main():
             subject=args.participant_label,
             session="1",
             access_key_id=args.s3_key[0],
-            secret_access_key=args.s3_key[0],
+            secret_access_key=args.s3_key[1],
         )
 
 
