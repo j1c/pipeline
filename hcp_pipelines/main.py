@@ -217,7 +217,7 @@ def main():
 
     # Upload to s3
     if args.push_location:
-        print(f"Pushing to s3 at {push_location}.")
+        print(f"Pushing to s3 at {args.push_location}.")
         s3_push_data(
             args.push_location,
             "/output",
