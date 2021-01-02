@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--skip_dmriprep", action="store_true")
     parser.add_argument("--skip_download", action="store_true")
     parser.add_argument("--skip_m2g", action="store_true")
+    parser.add_argument("--only_dmriprep", action="store_true")
     parser.add_argument(
         "--push_location",
         action="store",
@@ -157,6 +158,10 @@ def main():
             --participant_label {args.participant_label} \
             --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
         run(cmd)
+
+        # Skip all other steps. Only useful for debugging.
+        if args.only_dmriprep:
+            return 0
 
         # Rename files
         input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi/"
