@@ -114,7 +114,7 @@ RUN git clone https://github.com/j1c/hcp2bids \
     && cd ../hcp2bids \
     && pip install .
 
-RUN git clone https://github.com/neurodata/hcp_pipelines \
+RUN git clone -b dmriprep https://github.com/neurodata/hcp_pipelines \
     && cd ../hcp_pipelines \ 
     && pip install . 
 
