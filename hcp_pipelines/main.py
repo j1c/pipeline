@@ -199,23 +199,12 @@ def main():
         if args.remove_work_dir:
             shutil.rmtree("/work_dir", ignore_errors=True)
 
-    # Run m2g
-    if not args.skip_m2g:
-        cmd = f"m2g_bids --participant_label {args.participant_label} --session_label 1\
-            --pipeline dwi --skipeddy --voxelsize 1mm\
-            --parcellation {' '.join(args.parcellation)}\
-            --n_cpus {args.n_cpus}  --mem_gb  {args.mem_gb} --seeds {args.seeds}\
-            --diffusion_model {args.diffusion_model} --mod {args.mod}\
-            --filtering_type {args.filtering_type}\
-            /input /output"
-        run(cmd)
-
     # Upload to s3
     if args.push_location:
         print(f"Pushing to s3 at {args.push_location}.")
         s3_upload(
             args.push_location,
-            "/output",
+            "/input",
             subject=args.participant_label,
             session="1",
             access_key_id=args.s3_key[0],

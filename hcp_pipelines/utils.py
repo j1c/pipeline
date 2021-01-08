@@ -45,7 +45,6 @@ def s3_upload(
                         os.path.join(root, file_),
                         bucket,
                         f"{remote}/{os.path.join(spath,file_)}",
-                        ExtraArgs={"ACL": "public-read"},
                     )
 
 
