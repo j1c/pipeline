@@ -137,67 +137,11 @@ def main():
     if not args.skip_download:
         # Get the data and convert to bids
         print("Downloading data...\n")
-        get_data(
-            output_path="/input",
-            subjects=args.participant_label,
-            access_key_id=args.hcp_key[0],
-            secret_access_key=args.hcp_key[1],
-            exclude_list=args.exclude_download,
+        client = boto3.client(
+            "s3",
+            aws_access_key_id=args.hcp_key[0],
+            aws_secret_access_key=args.hcp_key[1],
         )
-        convert(
-            input_path="/input",
-            output_path="/input",
-            include_ses=True,
-        )
-
-    if not args.skip_dmriprep:
-        # Run dmriprep
-        print("Running dmriprep...\n")
-        cmd = f"dmriprep /input /output participant -w /work_dir -s 1 \
-            --denoise_strategy {args.denoise_strategy} \
-            --participant_label {args.participant_label} \
-            --nprocs {args.n_cpus} --omp_nthreads {args.n_cpus} --mem_gb {args.mem_gb} "
-        run(cmd)
-
-        # Skip all other steps. Only useful for debugging.
-        if args.only_dmriprep:
-            return 0
-
-        # Rename files
-        input_dir = f"/input/sub-{args.participant_label}/ses-1/dwi/"
-        shutil.rmtree(input_dir)
-        shutil.copytree(
-            f"/output/sub-{args.participant_label}/ses-1/dwi/",
-            f"/input/sub-{args.participant_label}/ses-1/dwi/",
-        )
-        shutil.rmtree("/output/", ignore_errors=True)
-        input_dir = Path(input_dir)
-
-        # Make output dir per m2g spec
-        m2g_path = Path(f"/output/sub-{args.participant_label}/ses-1/dwi/preproc/")
-        m2g_path.mkdir(parents=True, exist_ok=True)
-
-        files = list(input_dir.glob("*.*"))
-        for file in files:
-            if not "final" in file.name:
-                file.unlink()
-            else:
-                parent = file.parent
-                bids_name = f"sub-{args.participant_label}_ses-1_run-1_dwi"
-                suffix = file.suffix
-                if suffix == ".gz":
-                    suffix = ".nii.gz"
-
-                new_name = parent / (bids_name + suffix)
-                file.rename(new_name)
-
-                if suffix == ".nii.gz":
-                    eddy_file = m2g_path / "eddy_corrected_data.nii.gz"
-                    shutil.copyfile(str(new_name.absolute()), str(eddy_file.absolute()))
-
-        # Delete work dir
-        if args.remove_work_dir:
-            shutil.rmtree("/work_dir", ignore_errors=True)
 
     # Run m2g
     if not args.skip_m2g:
