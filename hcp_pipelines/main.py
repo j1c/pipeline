@@ -171,6 +171,13 @@ def main():
             f"/input/sub-{args.participant_label}/ses-1/dwi/",
         )
         shutil.rmtree("/output/", ignore_errors=True)
+
+        # Remove eddy quad folder
+        shutil.rmtree(
+            f"/input/sub-{args.participant_label}/ses-1/dwi/eddy_quad/",
+            ignore_errors=True,
+        )
+
         input_dir = Path(input_dir)
 
         # Make output dir per m2g spec
