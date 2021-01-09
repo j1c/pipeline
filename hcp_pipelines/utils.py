@@ -44,7 +44,7 @@ def s3_upload(
                     client.upload_file(
                         os.path.join(root, file_),
                         bucket,
-                        f"{remote}/{os.path.join(spath,file_)}",
+                        f"{os.path.join(spath,file_)}",
                     )
 
 
