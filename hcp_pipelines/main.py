@@ -3,7 +3,7 @@ import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
 
-from hcp2bids import convert, get_data
+import boto3
 
 from .utils import s3_upload
 
@@ -141,6 +141,36 @@ def main():
             "s3",
             aws_access_key_id=args.hcp_key[0],
             aws_secret_access_key=args.hcp_key[1],
+        )
+
+        # Make output dir per m2g spec
+        m2g_path = Path(f"/output/sub-{args.participant_label}/ses-1/dwi/preproc/")
+        m2g_path.mkdir(parents=True, exist_ok=True)
+
+        # Get files to download
+        response = client.list_objects(
+            Bucket="hcp1200", Prefix=f"sub-{args.participant_label}"
+        )
+        keys = [r["Key"] for r in response["Contents"]]
+
+        # Download the files
+        for key in keys:
+            p = Path("/input")
+            f = p / key
+
+            if not f.parent.exists():
+                f.parent.mkdir(parents=True, exist_ok=True)
+
+            client.download_file(Bucket="hcp1200", Key=key, Filename=str(f))
+
+            if str(f).endswith("dwi.nii.gz"):
+                eddy_file = m2g_path / "eddy_corrected_data.nii.gz"
+                shutil.copyfile(str(f), eddy_file)
+
+        client.download_file(
+            Bucket="hcp1200",
+            Key="dataset_description.json",
+            Filename="/input/dataset_description.json",
         )
 
     # Run m2g
